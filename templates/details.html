@@ -15,4 +15,18 @@ User details
     <button >Delete</button>
 </form>
 
+<h1>Posts</h1>
+<ul>
+    {% if posts %}
+    {% for post in posts %}
+    <li><a href="/posts/{{post.id}}">{{post.title}}</a></li>
+    {% endfor %}
+    {% else %}
+    <p>This user has not posted anything</p>
+    {% endif %}
+</ul>
+<form action="/users/{{user.id}}/posts/new">
+    <button>Add new post</button>
+</form>
+
 {% endblock%}
