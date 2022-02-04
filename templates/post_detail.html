@@ -10,6 +10,17 @@ Post Detail Page
 <p>{{post.content}}</p>
 <p>by {{post.u.first_name}} {{post.u.last_name}}</p>
 
+{% if post.tags %}
+<b>Tag: </b>
+{% for tag in tags%}
+<p>{{tag.name}}</p>
+{% endfor %}
+{% else %}
+<p>_</p>
+{% endif %}
+
+
+
 <form action="/users/{{post.creater}}">
     <button >Cancel</button>
 </form>

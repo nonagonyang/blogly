@@ -50,9 +50,42 @@ class Post(db.Model):
     creater = db.Column(db.Integer,db.ForeignKey('users.id'))
 
     u = db.relationship('User',backref='posts')
+    pts = db.relationship('PostTag',backref='post')
+    tags = db.relationship('Tag',secondary='posts_tags',backref='posts')
     
     @property
     def friendly_date(self):
         """Return nicely-formatted date."""
-
         return self.created_at.strftime("%a %b %-d  %Y, %-I:%M %p")
+
+
+
+
+# There should be a SQLAlchemy model for tags 
+# id
+# name, (unique!)
+class Tag(db.Model):
+    __tablename__="tags"
+    def __repr__(self):
+        t=self
+        return f"<Tag id={t.id} name={t.name}>"
+    id=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name=db.Column(db.Text,nullable=False, unique=True)
+    # direct navigation: tag -> post_tag & back
+    pts = db.relationship('PostTag',backref='tag')
+    # direct navigation: tag -> post & back
+    # posts = db.relationship('Post',secondary='posts_tags',
+    #                            backref='tags')
+    
+
+
+# There should also be a model for PostTag
+# It will have foreign keys for the both the post_id and tag_id. 
+# Since we don’t want the same post to be tagged to the same tag more than once, 
+# we’ll want the combination of post + tag to be unique. 
+# It also makes sense that neither the post_id nor tag_id can be null. 
+# Therefore, we’ll use a “composite primary key” for this table— a primary key made of more than one field. 
+class PostTag(db.Model):
+    __tablename__="posts_tags"
+    post_id=db.Column(db.Integer, db.ForeignKey("posts.id"),primary_key=True,nullable=False)
+    tag_id=db.Column(db.Integer, db.ForeignKey("tags.id"),primary_key=True,nullable=False)

@@ -10,6 +10,19 @@ Post Edit Page
 <form action="/posts/{{post.id}}/edit" method="POST">
     <p>Title:<input name="title" value={{post.title}}></p>
     <p>Content:<input name="content" value={{post.content}}></p>
+    <br>
+    {% for tag in tags %}
+    <div>
+      <input 
+             type="checkbox"
+             value="{{ tag.id }}"
+             {% if tag in post.tags %}checked{% endif %}
+             name="tags">
+      <label for="tag_{{ tag.id }}">
+        {{ tag.name }}
+      </label>
+    </div>
+    {% endfor %}
     <button>Save Edit</button>
 </form>
 <form action="/users/{{post.creater}}">
